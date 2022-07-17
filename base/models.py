@@ -55,7 +55,7 @@ class otcProduct(models.Model):
     Prod_Name = models.CharField(max_length=200, verbose_name="Product Name")
     ProdType_Name = models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Product Type")
     Cat_Name = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Category")
-    Prod_Desc = models.TextField(max_length=200, null=True, blank=True, verbose_name="Description")
+    Prod_Desc = models.TextField(max_length=300, null=True, blank=True, verbose_name="Description")
     Prod_stockQty = models.IntegerField(verbose_name="Stock Quantity")
     Prod_Price = models.DecimalField(decimal_places=2, max_digits=6, verbose_name="Price")
     Prod_Image = models.ImageField(default="placeholder-image.png", upload_to="product_images", null=True, verbose_name="Product Image")
@@ -83,26 +83,6 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
-'''class Product(models.Model):
-    name = models.CharField(max_length=200, null=True)
-    price = models.FloatField()
-
-    #For digital products that won't be shipped
-    #Can change later
-
-    image = models.ImageField(null=True, blank=True)
-    
-    def __str__(self):
-        return self.name
-
-    @property
-    def imageURL(self):
-        try:
-            url = self.image.url
-        except:
-            url = ''
-        return url
-'''
 #PRODUCT PICKUP
 class PickupStatus(models.Model):
     pickup_status = models.CharField(max_length=200, unique=True)
