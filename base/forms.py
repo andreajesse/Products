@@ -6,7 +6,7 @@ from .models import otcProduct, insProduct
 class otcProductForm(ModelForm):
     class Meta:
         model = otcProduct
-        fields = ['Prod_Name', 'ProdType_Name', 'Cat_Name', 'Prod_Desc', 'Prod_stockQty', 'Prod_Price', 'expiry_date','Prod_Image', 'is_active']
+        fields = ['Prod_Name', 'ProdType_Name', 'Cat_Name', 'Prod_Desc', 'Prod_stockQty', 'Prod_Price', 'expiry_date', 'Prod_Image', 'is_active'] 
 
 #IN-SALON PRODUCT FORM
 class insProductForm(ModelForm):

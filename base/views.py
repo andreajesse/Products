@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 import json
+import datetime
 
 from .models import * #insProduct, otcProduct, ProductType, Category, C 
 from .forms import otcProductForm, insProductForm #, StatusForm
@@ -33,7 +34,8 @@ def shop(request):
     context= {'prod_type': prod_type, 'categories': categories, 'products': products, 'page_prod': page_prod}
     return render(request, 'base/otc-products/shop.html', context)
 
-	# '''data = cartData(request)
+	# for cart number (navbar)
+    # '''data = cartData(request)
 
 	# cartItems = data['cartItems']
 	# order = data['order']
@@ -43,10 +45,12 @@ def shop(request):
 	# 	customer = request.user.customer
 	# 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
 	# 	items = order.orderitem_set.all()
+            # for cart number (navbar) -remove this line-
 	# 	cartItems = order.get_cart_items
 	# else:
 	# 	items=[]
-	# 	order =  {'get_cart_total':0, 'get_cart_items':0}
+	# 	order =  {'get_cart_total':0, 'get_cart_items':0, 'pickup': False}
+            # for cart number (navbar) -remove this line-
 	# 	cartItems = order['get_cart_items']
 		
 	# products = Product.objects.all()
@@ -197,7 +201,7 @@ def cart(request):
 		cartItems = order.get_cart_items
 	else:
 		items=[]
-		order =  {'get_cart_total':0, 'get_cart_items':0}
+		order =  {'get_cart_total':0, 'get_cart_items':0, 'pickup': False}
 		cartItems = order['get_cart_items']
 		
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
@@ -212,7 +216,7 @@ def checkout(request):
 		cartItems = order.get_cart_items
 	else:
 		items=[]
-		order =  {'get_cart_total':0, 'get_cart_items':0}
+		order =  {'get_cart_total':0, 'get_cart_items':0, 'pickup': False}
 		cartItems = order['get_cart_items']
 		
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
@@ -227,7 +231,7 @@ def mypurchases(request):
 		cartItems = order.get_cart_items
 	else:
 		items=[]
-		order =  {'get_cart_total':0, 'get_cart_items':0}
+		order =  {'get_cart_total':0, 'get_cart_items':0, 'pickup': False}
 		cartItems = order['get_cart_items']
 		
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
@@ -241,18 +245,25 @@ def salesinvoice(request):
 
 #UPDATE ITEM RENDER VIEW
 def updateItem(request):
+    ## parse since it is a string value
 	data = json.loads(request.body)
+    ## get the product id and action
 	productId = data['productId']
 	action = data['action']
-	print('action:', action)
-	print('product:', productId)
 
+	print('Action:', action)
+	print('Product ID:', productId)
+
+    ## query customer
 	customer = request.user.customer
+    ## get the product we are passing in
 	product = otcProduct.objects.get(id=productId)
+    ## create or add to order
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
 	orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
 
+    ## quantity
 	if action == 'add':
 		orderItem.quantity = (orderItem.quantity + 1)
 	elif action == 'remove':
@@ -265,7 +276,7 @@ def updateItem(request):
 
 	return JsonResponse('Item was added', safe=False)
 
-'''def processOrder(request):
+def processOrder(request):
 	transaction_id = datetime.datetime.now().timestamp()
 	data = json.loads(request.body)
 
@@ -282,14 +293,11 @@ def updateItem(request):
 		order.complete = True
 	order.save()
 
-	if order.shipping == True:
-		ShippingAddress.objects.create(
+	if order.pickup == True:
+		PickUp.objects.create(
 		customer=customer,
 		order=order,
-		address=data['shipping']['address'],
-		city=data['shipping']['city'],
-		state=data['shipping']['state'],
-		zipcode=data['shipping']['zipcode'],
+		pickup=data['pickup']['pickupdate'],
 		)
 
-	return JsonResponse('Payment submitted..', safe=False)'''
+	return JsonResponse('Order Complete!', safe=False)

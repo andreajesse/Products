@@ -42,6 +42,7 @@
                 <div class="details-stock">
                     <label>{{product.Prod_stockQty}} </label><label>in stock</label>
                 </div>
+                <!-- STOCK QUANTITY BUTTON -->
                 <div class="number-input">
                     <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()" ></button>
                         <input class="quantity" min="1" max="{{product.Prod_stockQty}}" name="quantity" value="1" type="number">
@@ -50,7 +51,7 @@
                 
                 <!-- ADD TO CART -->
                 <div class="details-add-to-cart">
-                    <button type="submit" value="Submit">Add to Cart</button>
+                    <button data-product={{product.id}} data-action="add" class="btn btn-primary add-btn add-btn update-cart"> Add to Cart </button>
                 </div>
             </div>
         </div>

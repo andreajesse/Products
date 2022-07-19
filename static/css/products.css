@@ -27,8 +27,10 @@
         width: 100%;
         margin: 20px auto;
         padding: 40px 30px;
-        box-shadow: rgba(0, 0, 0, 0.212) 1px 2px 3px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        /* box-shadow: rgba(0, 0, 0, 0.212) 1px 2px 3px; */
         background-color: white;
+        border-radius: 20px;
     }
 
     /***** PRODUCT TITLE|FILTER|SEARCH|EXPORT *****/
@@ -86,10 +88,10 @@
         color: #535353;
     }
     table th:first-child{
-        border-radius: 8px 0 0 8px;
+        border-radius: 15px 0 0 15px;
     }
     table th:last-child{
-        border-radius: 0 8px 8px 0;
+        border-radius: 0 15px 15px 0;
     }
 
     /* TABLE BODY */

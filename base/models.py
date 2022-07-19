@@ -5,12 +5,13 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 #PRODUCTS MODELS ------------------------------------------------------
+#Is Active Manager
 class IsActiveManager(models.Manager):
     def get_queryset(self):
 
         return super(IsActiveManager, self).get_queryset().filter(is_active=True)
 
-#PRODUCT CATEGORY (SHAMPOO ETC)
+#PRODUCT CATEGORY (BRANDS AND PROMOS)
 class Category(models.Model):
     Cat_Name = models.CharField(max_length=200, unique=True)
 
@@ -21,26 +22,28 @@ class Category(models.Model):
     def __str__(self):
         return self.Cat_Name
 
-#IN-SALON OR OTC PRODUCTS
+#PRODUCT TYPE (SHAMPOO, CONDITIONER ETC.)
 class ProductType(models.Model):
     ProdType_Name = models.CharField(max_length=200, verbose_name="Product Type", unique=True)
 
     def __str__(self):
         return self.ProdType_Name
 
+#In-Salon Products
 class insProduct(models.Model):
     Prod_Name = models.CharField(max_length=200, verbose_name="Product Name")
     ProdType_Name = models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Product Type")
     Cat_Name = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Category")
     Prod_Desc = models.TextField(max_length=200, null=True, blank=True, verbose_name="Description")
-    Prod_stockQty = models.DecimalField(decimal_places=2, max_digits=6, verbose_name="Stock Quantity")
-    Prod_Price = models.FloatField(verbose_name="Price")
+    Prod_stockQty = models.IntegerField(verbose_name="Stock Quantity")
+    Prod_Price = models.DecimalField(decimal_places=2, max_digits=6, verbose_name="Price")
     Prod_Image = models.ImageField(default="placeholder-image.png", upload_to="product_images", null=True, verbose_name="Product Image")
     is_active = models.BooleanField(default=True, verbose_name="Status")
     objects = models.Manager() #For All Records  
     active_objects = IsActiveManager() #For Active Records Only
     date_created = models.DateTimeField(default=timezone.now)
-    expiry_date = models.DateTimeField(null=True, blank=False)
+    expiry_date = models.DateField(null=True, blank=False, verbose_name="Expiry Date")
+    
     #insProd_totalUsed = models.IntegerField(verbose_name="Total Used")
     #insProd_dateRestocked = models.DateTimeField(auto_now=True)
     #insProd_DateUsed
@@ -51,11 +54,12 @@ class insProduct(models.Model):
     def __str__(self):
         return self.Prod_Name
 
+#Over-the-Counter Products
 class otcProduct(models.Model):
     Prod_Name = models.CharField(max_length=200, verbose_name="Product Name")
     ProdType_Name = models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Product Type")
     Cat_Name = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Category")
-    Prod_Desc = models.TextField(max_length=300, null=True, blank=True, verbose_name="Description")
+    Prod_Desc = models.TextField(max_length=200, null=True, blank=True, verbose_name="Description")
     Prod_stockQty = models.IntegerField(verbose_name="Stock Quantity")
     Prod_Price = models.DecimalField(decimal_places=2, max_digits=6, verbose_name="Price")
     Prod_Image = models.ImageField(default="placeholder-image.png", upload_to="product_images", null=True, verbose_name="Product Image")
@@ -63,7 +67,10 @@ class otcProduct(models.Model):
     objects = models.Manager() #For All Records  
     active_objects = IsActiveManager() #For Active Records Only
     date_created = models.DateTimeField(default=timezone.now)
-    expiry_date = models.DateTimeField(null=True, blank=False)
+    expiry_date = models.DateField(null=True, blank=False, verbose_name="Expiry Date")
+
+
+    digital = models.BooleanField(default=False, null=True, blank=False)
 
     class Meta:
         verbose_name = 'Over-the-Counter Product'
@@ -72,7 +79,7 @@ class otcProduct(models.Model):
         return self.Prod_Name
 
 #ECOMMERCE MODELS ------------------------------------------------------
-
+#CUSTOMER
 class Customer(models.Model):
     #A user can only have one customer. Customer can only have one user
     #Keep the on_delete=models.CASCADE for now; change later
@@ -99,11 +106,19 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
-    pickUp_Date = models.DateTimeField(null=True, blank=False, verbose_name="Pickup Date")
-    pickupstat = models.ForeignKey(PickupStatus, on_delete=models.SET_NULL, blank=False, null=True)
+    pickupstat = models.ForeignKey(PickupStatus, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return str(self.id)
+
+    @property
+    def pickup(self):
+        pickup = False
+        orderitems= self.orderitem_set.all()
+        for i in orderitems:
+            if i.product.digital == False:
+                pickup = True
+        return pickup
 
     @property
     def get_cart_total(self):
@@ -128,7 +143,17 @@ class OrderItem(models.Model):
         total = self.product.Prod_Price * self.quantity
         return total
 
-# PRODUCT PICKUP
+class PickUp(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    pickup = models.DateField(null=True, blank=False, verbose_name="Pickup Date")
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+	    return str(self.pickup)
+
 class SalesInvoice(models.Model):
     product_pickupID = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=False, null=True)
     amount_total = models.DecimalField(decimal_places=2, max_digits=6, verbose_name="Total Price")
+
+
