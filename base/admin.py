@@ -8,8 +8,18 @@ admin.site.site_title = "SalOnTheGo Admin"
 
 from .models import * #insProduct, otcProduct, ProductType, Category
 
-admin.site.register(insProduct)
-admin.site.register(otcProduct)
+#In-salon Products
+class insProductAdmin(admin.ModelAdmin):
+    list_display = ('id','Prod_Name', 'ProdType_Name', 'Cat_Name', 'Prod_stockQty', 'Prod_Price', 'is_active', 'expiry_date')
+    list_editable = ('is_active',)
+admin.site.register(insProduct, insProductAdmin)
+
+#Over-the-Counter Products
+class otcProductAdmin(admin.ModelAdmin):
+    list_display = ('id','Prod_Name', 'ProdType_Name', 'Cat_Name', 'Prod_stockQty', 'Prod_Price', 'is_active', 'expiry_date')
+    list_editable = ('is_active',)
+admin.site.register(otcProduct, otcProductAdmin)
+
 admin.site.register(ProductType)
 admin.site.register(Category)
 

@@ -223,7 +223,7 @@
         .then((response) => response.json())
         .then((data) => {
             console.log('Success:', data);
-            alert('Transaction completed');  
+            alert('Order processed.');  
 
             cart = {}
             document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
