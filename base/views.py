@@ -302,9 +302,31 @@ def processOrder(request):
 
 	return JsonResponse('Order Complete!', safe=False)
 
+#ADMIN VIEW: APPROVAL OF ORDERS
 def orders(request):
     orders = Order.objects.all()
-    orderitems = OrderItem.objects.all()
+    orderitems = OrderItem.objects.filter()
+
+    # if request.method == 'POST':
+    #     pickup_status = request.POST.get('pickup_status')
+    #     create = Order(pickup_status=pickup_status)
+    #     create.save()
+    if request.method == 'POST':
+        if request.POST['button'] == 'Reject Order':
+            reject_pickup = request.POST.get('reject')
+            Order.objects.get(pk=reject_pickup).delete()
+            return redirect('appointmentsPending')
+        elif request.POST['button'] == 'Approve Order':
+            approve_pickup = request.POST.get('approve')
+            Order.objects.filter(pk=approve_pickup).update(pickup='Approved')
 
     context = {'orders': orders, 'orderitems': orderitems}
     return render(request, 'base/otc-products/orders.html', context)
+
+#ADMIN VIEW: ORDER ITEMS OF INDIVIDUAL CUSTOMERS
+def order_items(request, pk):
+    order = Order.objects.get(id=pk)
+    orderitems = OrderItem.objects.filter(order=order).order_by('-id')
+
+    context = {'order': order, 'orderitems': orderitems}
+    return render(request, 'base/otc-products/order-items.html', context)

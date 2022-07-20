@@ -16,6 +16,7 @@
     margin: 0 auto 20px;
 }
 .go-back a{
+    font-size: 18px;
     text-decoration: none;
     color: #001D6E;
 }
@@ -26,6 +27,22 @@
     .fa-circle-arrow-left {
         margin-right: 8px;
     }
+    /* GO BACK LINK FOR TABLES */
+    .go-back-table {
+        width: 770px;
+    }
+    .go-back-table a {
+        font-size: 18px;
+        text-decoration: none;
+        color: #001D6E;
+    }
+        .go-back-table a:hover{
+            text-decoration: underline;
+            color: #002281;
+        }
+        .fa-circle-arrow-left {
+            margin-right: 8px;
+        }
 
 /* FONT LABEL AND TEXT */
 .form-style input[type=submit],

@@ -13,11 +13,12 @@ class insProductForm(ModelForm):
     class Meta:
         model = insProduct
         fields = ['Prod_Name', 'ProdType_Name', 'Cat_Name', 'Prod_Desc', 'Prod_stockQty', 'Prod_Price', 'expiry_date', 'Prod_Image', 'is_active']
+        
 
-class StatusForm(forms.ModelForm):
-    class Meta:
-        model = otcProduct
-        fields = ['is_active']
+# class StatusForm(forms.ModelForm):
+#     class Meta:
+#         model = otcProduct
+#         fields = ['is_active']
 
         #widgets = {
         #    'is_active': CheckboxInput(attrs={'onchange': 'this.form.submit();'})

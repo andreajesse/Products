@@ -11,10 +11,11 @@
     }
     /* GO BACK BUTTON */
     .go-back2 {
-        width: 410px;
+        width: 400px;
         margin: 0 auto 20px;
     }
     .go-back2 a{
+        font-size: 18px;
         text-decoration: none;
         color: #001D6E;
     }

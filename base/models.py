@@ -1,3 +1,4 @@
+from itertools import product
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -103,7 +104,7 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
-    pickup_status = models.CharField(choices=PICKUP_STATUS, max_length=50)
+    pickup_status = models.CharField(choices=PICKUP_STATUS, max_length=50, default='Pending')
 
     def __str__(self):
         return str(self.id)
