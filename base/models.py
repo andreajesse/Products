@@ -90,23 +90,20 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
-#PRODUCT PICKUP
-class PickupStatus(models.Model):
-    pickup_status = models.CharField(max_length=200, unique=True)
-
-    class Meta:
-        verbose_name = 'Product Pickup Status'
-        verbose_name_plural = 'Product Pickup Statuses'
-
-    def __str__(self):
-        return self.pickup_status
+PICKUP_STATUS = (
+    ('Pending', 'Pending'),
+    ('Approved', 'Approved'),
+    ('Cancelled', 'Cancelled'),
+    ('Transaction Successful', 'Transaction Successful'),
+    ('Confirmed', 'Confirmed')
+)
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
-    pickupstat = models.ForeignKey(PickupStatus, on_delete=models.SET_NULL, blank=True, null=True)
+    pickup_status = models.CharField(choices=PICKUP_STATUS, max_length=50)
 
     def __str__(self):
         return str(self.id)

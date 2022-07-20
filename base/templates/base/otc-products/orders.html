@@ -1,0 +1,70 @@
+{% extends 'main_products.html' %}
+
+{% block content %}
+
+<h1>Orders</h1>
+{% for orderitems in orders %}
+    {{ OrderItem.order.product }}
+    {{ order.OrderItem.quantity }}
+{% endfor %}
+    <table>
+        <thead>
+            <tr>
+                <!-- TABLE HEADER -->
+                <th scope="col">Customer</th>
+                <th scope="col">Transaction ID</th>
+                <th scope="col">Date Ordered</th>
+                <th scope="col">Pickup Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for order in orders %}
+            {% if order.complete == True %}
+            <tr>
+                <!-- TABLE BODY -->
+                <td data-label="Customer">{{ order.customer }}</td>
+                <td data-label="Transaction ID">{{ order.transaction_id }}</td>
+                <td data-label="Date Ordered">{{ order.date_ordered }}</td>
+                
+                <form method="POST" action="">
+                    {% csrf_token %}
+                </form>
+                <td data-label="Pickup Status">{{ order.pickup_status }}</td>
+
+                <!-- <td colspan="8">No results found.</td> -->
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- BACK TO TOP BUTTON -->
+<button onclick="topFunction()" id="myBtn" title="Go to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+<!-- BACK TO TOP SCRIPT -->
+    <script>
+        //Get the button
+        var mybutton = document.getElementById("myBtn");
+        
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+        
+        function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+        }
+        
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        }
+    </script>
+{% endblock content %}

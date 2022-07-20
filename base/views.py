@@ -301,3 +301,10 @@ def processOrder(request):
 		)
 
 	return JsonResponse('Order Complete!', safe=False)
+
+def orders(request):
+    orders = Order.objects.all()
+    orderitems = OrderItem.objects.all()
+
+    context = {'orders': orders, 'orderitems': orderitems}
+    return render(request, 'base/otc-products/orders.html', context)
