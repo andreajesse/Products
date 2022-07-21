@@ -105,7 +105,7 @@ class Order(models.Model):
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
     pickup_status = models.CharField(choices=PICKUP_STATUS, max_length=50, default='Pending')
-
+    
     def __str__(self):
         return str(self.id)
 
@@ -141,7 +141,7 @@ class OrderItem(models.Model):
         total = self.product.Prod_Price * self.quantity
         return total
 
-class PickUp(models.Model):
+class OrderPickUp(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     pickup = models.DateField(null=True, blank=False, verbose_name="Pickup Date")

@@ -32,7 +32,7 @@ def shop(request):
     page_prod = paginator.get_page(page_number)
 
     context= {'prod_type': prod_type, 'categories': categories, 'products': products, 'page_prod': page_prod}
-    return render(request, 'base/otc-products/shop.html', context)
+    return render(request, 'base/otc-products/client/shop.html', context)
 
 	# for cart number (navbar)
     # '''data = cartData(request)
@@ -67,7 +67,7 @@ def shopIndivProduct(request, pk):
     ).order_by('?').exclude(id=pk)
 
     context = {'product': product, 'browse': browse}
-    return render(request, 'base/otc-products/shop_indiv_product.html', context)
+    return render(request, 'base/otc-products/client/shop_indiv_product.html', context)
 
 def otcProducts(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -92,13 +92,13 @@ def otcProducts(request):
     page_prod = paginator.get_page(page_number)
 
     context = {'products': products, 'search': search, 'page_prod': page_prod}
-    return render(request, 'base/otc-products/products.html', context)
+    return render(request, 'base/otc-products/admin/products.html', context)
 
 def otc_indivProduct(request, pk):
     product = otcProduct.objects.get(id=pk)
 
     context = {'product': product}
-    return render(request, 'base/otc-products/indiv_product.html', context)
+    return render(request, 'base/otc-products/admin/indiv_product.html', context)
 
 def otc_createProduct(request):
     form = otcProductForm()
@@ -109,7 +109,7 @@ def otc_createProduct(request):
             return redirect('otc-products')
 
     context = {'form': form}
-    return render(request, 'base/otc-products/product_form.html', context)
+    return render(request, 'base/otc-products/admin/product_form.html', context)
 
 def otc_updateProduct(request, pk):
     product = otcProduct.objects.get(id=pk)
@@ -122,7 +122,7 @@ def otc_updateProduct(request, pk):
             return redirect('otc-products')
 
     context = {'form': form}
-    return render(request, 'base/otc-products/product_form.html', context)
+    return render(request, 'base/otc-products/admin/product_form.html', context)
 
 #def deleteProduct(request, pk):
 #    product = otcProduct.objects.get(id=pk)
@@ -205,7 +205,7 @@ def cart(request):
 		cartItems = order['get_cart_items']
 		
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
-	return render(request, 'base/otc-products/cart.html', context)
+	return render(request, 'base/otc-products/client/cart.html', context)
 
 #CHECKOUT RENDER VIEW
 def checkout(request):
@@ -220,7 +220,7 @@ def checkout(request):
 		cartItems = order['get_cart_items']
 		
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
-	return render(request, 'base/otc-products/checkout.html', context)
+	return render(request, 'base/otc-products/client/checkout.html', context)
 
 #PURCHASES RENDER VIEW
 def mypurchases(request):
@@ -241,7 +241,7 @@ def mypurchases(request):
 #SALES INVOICE RENDER VIEW
 def salesinvoice(request):
 	context = {}
-	return render(request, 'otc-products/salesinvoice.html', context)
+	return render(request, 'base/otc-products/admin/salesinvoice.html', context)
 
 #UPDATE ITEM RENDER VIEW
 def updateItem(request):
@@ -302,8 +302,31 @@ def processOrder(request):
 
 	return JsonResponse('Order Complete!', safe=False)
 
+#ADMIN VIEW: PENDING ORDERS
+def pending_orders(request):
+    orders = Order.objects.all()
+
+    if request.method == 'POST':
+        if request.POST['button'] == 'Reject':
+            reject_pickup = request.POST.get('reject')
+            Order.objects.filter(pk=reject_pickup).update(pickup_status='Cancelled')
+        elif request.POST['button'] == 'Approve':
+            approve_pickup = request.POST.get('approve')
+            Order.objects.filter(pk=approve_pickup).update(pickup_status='Approved')
+
+    context = {'orders': orders}
+    return render(request, 'base/otc-products/admin/pending-orders.html', context)
+
+#ADMIN VIEW: ORDER ITEMS OF INDIVIDUAL CUSTOMERS
+def order_items(request, pk):
+    order = Order.objects.get(id=pk)
+    orderitems = OrderItem.objects.filter(order=order).order_by('-id')
+
+    context = {'order': order, 'orderitems': orderitems}
+    return render(request, 'base/otc-products/admin/order-details.html', context)
+
 #ADMIN VIEW: APPROVAL OF ORDERS
-def orders(request):
+def approved_orders(request):
     orders = Order.objects.all()
     orderitems = OrderItem.objects.filter()
 
@@ -312,21 +335,12 @@ def orders(request):
     #     create = Order(pickup_status=pickup_status)
     #     create.save()
     if request.method == 'POST':
-        if request.POST['button'] == 'Reject Order':
-            reject_pickup = request.POST.get('reject')
-            Order.objects.get(pk=reject_pickup).delete()
-            return redirect('appointmentsPending')
-        elif request.POST['button'] == 'Approve Order':
-            approve_pickup = request.POST.get('approve')
-            Order.objects.filter(pk=approve_pickup).update(pickup='Approved')
+        if request.POST['button'] == 'Cancel':
+            cancel_pickup = request.POST.get('cancel')
+            Order.objects.filter(pk=cancel_pickup).update(pickup_status='Cancelled')
+        elif request.POST['button'] == 'Receive Payment':
+            transac_successful = request.POST.get('transaction-successful')
+            Order.objects.filter(pk=transac_successful).update(pickup_status='Transaction Successful')
 
     context = {'orders': orders, 'orderitems': orderitems}
-    return render(request, 'base/otc-products/orders.html', context)
-
-#ADMIN VIEW: ORDER ITEMS OF INDIVIDUAL CUSTOMERS
-def order_items(request, pk):
-    order = Order.objects.get(id=pk)
-    orderitems = OrderItem.objects.filter(order=order).order_by('-id')
-
-    context = {'order': order, 'orderitems': orderitems}
-    return render(request, 'base/otc-products/order-items.html', context)
+    return render(request, 'base/otc-products/admin/approved-orders.html', context)

@@ -2,12 +2,6 @@
 
 {% block content %}
 
-
-{% for orderitems in orders %}
-    {{ OrderItem.product }}
-    {{ order.OrderItem.quantity }}
-{% endfor %}
-
 <div class="main-wrapper">
     <div class="container">
         <div class="prodtable-container">
@@ -15,7 +9,7 @@
                 
                     <!-- TITLE -->
                     <div class="labels1">
-                        <h2>Orders</h2>
+                        <h2>Pending Reservations</h2>
                     </div>
                     <div class="labels2">
                         <ul>    
@@ -33,11 +27,13 @@
             <table>
                 <thead>
                     <tr>
-                        <!-- TABLE HEADER -->
+                        <!-- NEW TABLE HEADER -->
                         <th scope="col">Customer</th>
                         <th scope="col">Transaction ID</th>
+                        <th scope="col">Pickup Date</th>
                         <th scope="col">Date Ordered</th>
-                        <th scope="col">Pickup Status</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Status</th>
                     </tr>
                 </thead>
 
@@ -47,24 +43,25 @@
                     {% if order.pickup_status == 'Pending' %}
                     <tr>
                         <!-- TABLE BODY -->
-                        <td data-label="Customer"><a href="{% url 'order-items' order.id %}" id="prod-link">{{order.customer}}</a></td>
+                        <td data-label="Customer"><a href="{% url 'order-details' order.id %}" id="prod-link">{{order.customer}}</a></td>
                         <td data-label="Transaction ID">{{order.transaction_id}}</td>
+                        <td></td>
                         <td data-label="Date Ordered">{{order.date_ordered}}</td>
+                        <td data-label="Total"></td>
                         
                         <td>    
                             <form method="POST">
                             {% csrf_token %}
                                 <!-- APPROVE -->
                                 <input type="hidden" value="{{order.id}}" name="approve">
-                                <input type="submit" value="Approve Order" name="button" id="approve">
+                                <input type="submit" value="Approve" name="button" id="approve" onclick="return confirm('Approve Reservation?');">
                                 <br>
                                 <!-- REJECT -->
                                 <input type="hidden" value="{{order.id}}" name="reject">
-                                <input type="submit" value="Reject Order" name="button" id="reject">
+                                <input type="submit" value="Reject" name="button" id="reject" onclick="return confirm('Reject Reservation?');">
                             </form>
                         </td>
-
-
+                        
                         <!-- <td colspan="8">No results found.</td> -->
                     </tr>
                     {% endif %}

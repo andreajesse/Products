@@ -27,6 +27,6 @@ admin.site.register(Customer)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 
-admin.site.register(PickUp)
+admin.site.register(OrderPickUp)
 admin.site.register(SalesInvoice)
 #admin.site.register(ShippingAddress)

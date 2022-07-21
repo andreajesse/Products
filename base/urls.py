@@ -42,6 +42,10 @@ urlpatterns = [
 	path('update_item/', views.updateItem, name="update_item"),
     path('process_order/', views.processOrder, name="process_order"),
 
-    path('orders/', views.orders, name="orders"),
-    path('order-items/<str:pk>/', views.order_items, name="order-items"),
+    #ADMIN: VIEW PENDING ORDERS | APPROVE/REJECT
+    path('pending-orders/', views.pending_orders, name="pending-orders"),
+    # ----- VIEW ORDER DETAILS
+    path('order-items/<str:pk>/', views.order_items, name="order-details"),
+
+    path('approved-orders/', views.approved_orders, name="approved-orders"),
 ]
