@@ -30,9 +30,9 @@
                         <!-- NEW TABLE HEADER -->
                         <th scope="col">Customer</th>
                         <th scope="col">Transaction ID</th>
-                        <th scope="col">Pickup Date</th>
+                        <!--<th scope="col">Pickup Date</th>-->
                         <th scope="col">Date Ordered</th>
-                        <th scope="col">Total</th>
+                        <!--<th scope="col">Total</th>-->
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
@@ -43,9 +43,9 @@
                         <!-- TABLE BODY -->
                         <td data-label="Customer"><a href="{% url 'order-details' order.id %}" id="prod-link">{{order.customer}}</a></td>
                         <td data-label="Transaction ID">{{order.transaction_id}}</td>
-                        <td></td>
+                        <!--<td></td>-->
                         <td data-label="Date Ordered">{{order.date_ordered}}</td>
-                        <td data-label="Date Ordered">{{item.get_total}}</td>
+                        <!--<td data-label="Date Ordered">{{item.get_total}}</td>-->
                         
                         <td>    
                             <form method="POST">

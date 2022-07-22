@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Job Order Form</title>
+  	<title>Sales Invoice</title>
     <link rel="icon" type="image/x-icon" href="{% static '/images/favicon.ico' %}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,7 +10,7 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://kit.fontawesome.com/c3481268b6.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static '/css/jobOrderform.css' %}">
+    <link rel="stylesheet" href="{% static '/css/salesinvoice.css' %}">
   </head>
   <body>
 		
@@ -19,7 +19,7 @@
 		<div class="container-fluid justify-content-end">
 			<div class="row main justify-content-between">
 				<div class="col-sm-12 col-md-4 col-lg-4">
-					<h5 class="pageHeader"><a onclick="history.back()"><span class="fa fa-arrow-circle-left mr-3"></span></a>Go Back to Reservations</h5>
+					<h5 class="pageHeader" style="cursor: pointer;"><a onclick="history.back()"><span class="fa fa-arrow-circle-left mr-3"></span></a><a onclick="history.back()">Go Back to Reservations</a></h5>
 				</div>
 				<div class="col-sm-12 col-md-8 col-lg-8"></div>
 			</div>
@@ -42,13 +42,13 @@
                             <div class="row justify-content-between">
                                 <div class="col-sm-12 col-md-6 col-lg-6">
                                     <!-- DATE FOR PICKUP DATE -->
-                                    <h6 class="Details">DATE: {{ appointment.apptDate|date:'F' }} {{ appointment.apptDate|date:'d' }}</h6>
+                                    <h6 class="Details">DATE: {{order.date_ordered}}</h6>
                                 </div>
                                 <br><br><br>
                             </div>
                             <div class="row justify-content-between">
                                 <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <h6 class="Details">NAME: {{ appointment.customer_fname }} {{ appointment.customer_lname }} </h6></div>
+                                    <h6 class="Details">NAME: n</h6></div>
                                 <div class="col-sm-12 col-md-6 col-lg-6">
 
                                 </div>
@@ -87,7 +87,7 @@
                                                     <form method="POST">
                                                     {% csrf_token %}
                                                         <input type="hidden" value="{{ appointment.id }}" name="approve">
-                                                        <input class="btn btn-primary submitButton" type="submit" confirm="Confirm" name="button" id="confirm">
+                                                        <input class="btn btn-primary submitButton" value="Confirm" type="submit" confirm="Confirm" name="button" id="confirm">
                                                 </div>
                                         </div>
                     </form>

@@ -34,29 +34,6 @@ def shop(request):
     context= {'prod_type': prod_type, 'categories': categories, 'products': products, 'page_prod': page_prod}
     return render(request, 'base/otc-products/client/shop.html', context)
 
-	# for cart number (navbar)
-    # '''data = cartData(request)
-
-	# cartItems = data['cartItems']
-	# order = data['order']
-	# items = data['items']'''
-	
-	# if request.user.is_authenticated:
-	# 	customer = request.user.customer
-	# 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
-	# 	items = order.orderitem_set.all()
-            # for cart number (navbar) -remove this line-
-	# 	cartItems = order.get_cart_items
-	# else:
-	# 	items=[]
-	# 	order =  {'get_cart_total':0, 'get_cart_items':0, 'pickup': False}
-            # for cart number (navbar) -remove this line-
-	# 	cartItems = order['get_cart_items']
-		
-	# products = Product.objects.all()
-	# context = {'products':products, 'cartItems':cartItems}
-	# return render(request, 'otc-products/store.html', context)
-
 def shopIndivProduct(request, pk):
     product = otcProduct.active_objects.get(id=pk)
 
@@ -187,13 +164,6 @@ def ins_updateProduct(request, pk):
 
 #CART RENDER VIEW
 def cart(request):
-	'''data = cartData(request)
-
-	cartItems = data['cartItems']
-	order = data['order']
-	items = data['items']'''
-	#context = {'items':items, 'order':order, 'cartItems':cartItems}
-
 	if request.user.is_authenticated:
 		customer = request.user.customer
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
@@ -236,12 +206,6 @@ def mypurchases(request):
 		
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
 	return render(request, 'base/otc-products/mypurchases.html', context)
-
-
-#SALES INVOICE RENDER VIEW
-def salesinvoice(request):
-	context = {}
-	return render(request, 'base/otc-products/admin/salesinvoice.html', context)
 
 #UPDATE ITEM RENDER VIEW
 def updateItem(request):
@@ -337,6 +301,13 @@ def approved_orders(request):
         elif request.POST['button'] == 'Receive Payment':
             transac_successful = request.POST.get('transaction-successful')
             Order.objects.filter(pk=transac_successful).update(pickup_status='Transaction Successful')
+            #return redirect('sales-invoice')
 
     context = {'orders': orders, 'orderitems': orderitems}
     return render(request, 'base/otc-products/admin/approved-reservations.html', context)
+
+#SALES INVOICE RENDER VIEW
+def salesinvoice(request):
+    
+    context = {}
+    return render(request, 'base/otc-products/admin/sales-invoice.html', context)

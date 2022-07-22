@@ -36,7 +36,7 @@ urlpatterns = [
 
     #--------------------------SALES INVOICE--------------------------
     #NEEDS FRONT END UI
-	path('salesinvoice/', views.salesinvoice, name="salesinvoice"),
+	path('sales-invoice/', views.salesinvoice, name="sales-invoice"),
 
 	#JSON Response
 	path('update_item/', views.updateItem, name="update_item"),
