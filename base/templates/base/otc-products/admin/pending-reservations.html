@@ -9,7 +9,7 @@
                 
                     <!-- TITLE -->
                     <div class="labels1">
-                        <h2>Approved Reservations</h2>
+                        <h2>Pending Reservations</h2>
                     </div>
                     <div class="labels2">
                         <ul>    
@@ -27,7 +27,7 @@
             <table>
                 <thead>
                     <tr>
-                        <!-- NEW TABLE HEADER -->
+                        <!-- TABLE HEADER -->
                         <th scope="col">Customer</th>
                         <th scope="col">Transaction ID</th>
                         <th scope="col">Pickup Date</th>
@@ -39,33 +39,29 @@
 
                 <tbody>
                 {% for order in orders %}
-                    {% if order.complete == True %}
-                    {% if order.pickup_status == 'Pending' %}
                     <tr>
                         <!-- TABLE BODY -->
                         <td data-label="Customer"><a href="{% url 'order-details' order.id %}" id="prod-link">{{order.customer}}</a></td>
                         <td data-label="Transaction ID">{{order.transaction_id}}</td>
-                        <td></td>
+                        <td data-label="Pickup Date"></td>
                         <td data-label="Date Ordered">{{order.date_ordered}}</td>
-                        <td data-label="Date Ordered">{{item.get_total}}</td>
+                        <td data-label="Total"></td>
                         
                         <td>    
                             <form method="POST">
                             {% csrf_token %}
-                                <!-- RECEIVE PAYMENT -->
-                                <input type="hidden" value="{{order.id}}" name="transaction-successful">
-                                <input type="submit" value="Receive Payment" name="button" id="transaction-successful" onclick="return confirm('Payment Received?');">
+                                <!-- APPROVE -->
+                                <input type="hidden" value="{{order.id}}" name="approve">
+                                <input type="submit" value="Approve" name="button" id="approve" onclick="return confirm('Approve Reservation?');">
                                 <br>
-                                <!-- CANCEL -->
-                                <input type="hidden" value="{{order.id}}" name="cancel">
-                                <input type="submit" value="Cancel" name="button" id="cancel" onclick="return confirm('Cancel Reservation?');">
+                                <!-- REJECT -->
+                                <input type="hidden" value="{{order.id}}" name="reject">
+                                <input type="submit" value="Reject" name="button" id="reject" onclick="return confirm('Reject Reservation?');">
                             </form>
                         </td>
                         
                         <!-- <td colspan="8">No results found.</td> -->
                     </tr>
-                    {% endif %}
-                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

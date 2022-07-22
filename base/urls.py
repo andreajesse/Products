@@ -43,9 +43,9 @@ urlpatterns = [
     path('process_order/', views.processOrder, name="process_order"),
 
     #ADMIN: VIEW PENDING ORDERS | APPROVE/REJECT
-    path('pending-orders/', views.pending_orders, name="pending-orders"),
+    path('pending-reservations/', views.pending_orders, name="pending-reservations"),
     # ----- VIEW ORDER DETAILS
     path('order-items/<str:pk>/', views.order_items, name="order-details"),
 
-    path('approved-orders/', views.approved_orders, name="approved-orders"),
+    path('approved-reservations/', views.approved_orders, name="approved-reservations"),
 ]

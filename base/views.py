@@ -294,7 +294,7 @@ def processOrder(request):
 	order.save()
 
 	if order.pickup == True:
-		PickUp.objects.create(
+		OrderPickUp.objects.create(
 		customer=customer,
 		order=order,
 		pickup=data['pickup']['pickupdate'],
@@ -304,7 +304,7 @@ def processOrder(request):
 
 #ADMIN VIEW: PENDING ORDERS
 def pending_orders(request):
-    orders = Order.objects.all()
+    orders = Order.objects.filter(complete=True, pickup_status='Pending')
 
     if request.method == 'POST':
         if request.POST['button'] == 'Reject':
@@ -315,7 +315,7 @@ def pending_orders(request):
             Order.objects.filter(pk=approve_pickup).update(pickup_status='Approved')
 
     context = {'orders': orders}
-    return render(request, 'base/otc-products/admin/pending-orders.html', context)
+    return render(request, 'base/otc-products/admin/pending-reservations.html', context)
 
 #ADMIN VIEW: ORDER ITEMS OF INDIVIDUAL CUSTOMERS
 def order_items(request, pk):
@@ -327,13 +327,9 @@ def order_items(request, pk):
 
 #ADMIN VIEW: APPROVAL OF ORDERS
 def approved_orders(request):
-    orders = Order.objects.all()
+    orders = Order.objects.filter(complete=True, pickup_status='Approved')
     orderitems = OrderItem.objects.filter()
 
-    # if request.method == 'POST':
-    #     pickup_status = request.POST.get('pickup_status')
-    #     create = Order(pickup_status=pickup_status)
-    #     create.save()
     if request.method == 'POST':
         if request.POST['button'] == 'Cancel':
             cancel_pickup = request.POST.get('cancel')
@@ -343,4 +339,4 @@ def approved_orders(request):
             Order.objects.filter(pk=transac_successful).update(pickup_status='Transaction Successful')
 
     context = {'orders': orders, 'orderitems': orderitems}
-    return render(request, 'base/otc-products/admin/approved-orders.html', context)
+    return render(request, 'base/otc-products/admin/approved-reservations.html', context)
