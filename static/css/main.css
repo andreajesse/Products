@@ -15,8 +15,9 @@
     body {
         background-color: #F1F6FF;
         font-family: "Montserrat", sans-serif;
+        margin: 0;
     }
-    /* Light Beige BG COLOR: FFFAF4*/
+
     .main-wrapper {
         font-family: 'Montserrat', sans-serif;
         font-size: 16px;

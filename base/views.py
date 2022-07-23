@@ -15,6 +15,16 @@ def home(request):
 
 # OTC PRODUCTS ------------------------------------------------------
 def shop(request):
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items=[]
+        order =  {'get_cart_total':0, 'get_cart_items':0, 'pickup': False}
+        cartItems = order['get_cart_items']
+
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     products = otcProduct.active_objects.filter(
         Q(ProdType_Name__ProdType_Name__icontains=q) |
@@ -31,7 +41,7 @@ def shop(request):
     page_number = request.GET.get('page')
     page_prod = paginator.get_page(page_number)
 
-    context= {'prod_type': prod_type, 'categories': categories, 'products': products, 'page_prod': page_prod}
+    context= {'prod_type': prod_type, 'categories': categories, 'products': products, 'page_prod': page_prod, 'items':items, 'order':order, 'cartItems':cartItems}
     return render(request, 'base/otc-products/client/shop.html', context)
 
 def shopIndivProduct(request, pk):
