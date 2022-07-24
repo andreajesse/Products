@@ -66,7 +66,7 @@
     }
 
     /***** TABLE STYLE *****/
-    table { 
+    table.products-table { 
         border-spacing: 1; 
         border-collapse: collapse; 
         background: white;
@@ -78,29 +78,29 @@
     }
 
     /* TABLE HEADER */
-    thead tr th {
+    thead.products-thead tr th {
         font-weight: 400;
         font-size: 16px;
     }
-    thead tr { 
+    thead.products-thead tr { 
         height: 50px;
         background: #001D6E;
         color: white;
     }
-    table th:first-child{
+    table.products-table th:first-child{
         border-radius: 15px 0 0 15px;
     }
-    table th:last-child{
+    table.products-table th:last-child{
         border-radius: 0 15px 15px 0;
     }
 
     /* TABLE BODY */
-    tbody tr { 
+    tbody.products-tbody tr { 
         font-family: 'Montserrat', sans-serif;
         height: 130px; 
         border-bottom:  .5px solid #c9c9c9;
     }
-    tbody tr:last-child {
+    tbody.products-tbody tr:last-child {
         border: none;
     }
 
@@ -108,13 +108,14 @@
         padding: 0%;
     }
     
-    td, th {
+    .products-table td,
+    .products-tabl th {
         text-align: center;
         padding: 5px 10px;
     }
-    .td-align-left {
-        text-align: left;
-    }
+        .td-align-left {
+            text-align: left!important;
+        }
 
     /* PRODUCT IMAGE*/
     .prod-img{
@@ -221,6 +222,14 @@
         border: 1px solid #c5c5c5;
     }
 
+    /* RESERVATION PAGE LINK */
+    #customer-name-link {
+        font-weight: 600;
+        color: #7FB5FF;
+    }
+        #customer-name-link:hover {
+            color: #C4DDFF;
+        }
 
     /* For mobile phones: 
     @media only screen and (max-width: 480px) {

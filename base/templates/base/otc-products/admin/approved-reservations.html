@@ -24,38 +24,46 @@
                         </ul>
                     </div>
             </div>
-            <table>
-                <thead>
+            <table class="products-table">
+                <thead class="products-thead">
                     <tr>
-                        <!-- NEW TABLE HEADER -->
+                        <!-- TABLE HEADER -->
                         <th scope="col">Customer</th>
                         <th scope="col">Transaction ID</th>
-                        <!--<th scope="col">Pickup Date</th>-->
+                        <th scope="col">Pickup Date</th>
+                        <th scope="col">Order</th>
                         <th scope="col">Date Ordered</th>
-                        <!--<th scope="col">Total</th>-->
+                        <th scope="col">Total</th>
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
 
-                <tbody>
-                {% for order in orders %}
-                    <tr>
-                        <!-- TABLE BODY -->
-                        <td data-label="Customer"><a href="{% url 'order-details' order.id %}" id="prod-link">{{order.customer}}</a></td>
-                        <td data-label="Transaction ID">{{order.transaction_id}}</td>
-                        <!--<td></td>-->
-                        <td data-label="Date Ordered">{{order.date_ordered}}</td>
-                        <!--<td data-label="Date Ordered">{{item.get_total}}</td>-->
-                        
+                <tbody class="products-tbody">
+                    {% for orderpickup in orders %}
+                        <tr>
+                            <!-- TABLE BODY -->
+                            <td data-label="Customer"><a href="{% url 'order-details' orderpickup.order.id %}" id="customer-name-link">{{orderpickup.order.customer}}</a></td>
+                            <td data-label="Transaction ID">{{orderpickup.order.transaction_id}}</td>
+                            <td data-label="Pickup Date">{{orderpickup.pickup}}</td>
+                            <td data-label="Order">
+                                {% for item in items %}
+                                    {% if item.order.id == orderpickup.order.id %}
+                                        {{ item.product }} x {{ item.quantity }}<br>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>     
+                            <td data-label="Date Ordered">{{orderpickup.order.date_ordered}}</td>
+                            <td data-label="Total" id="price">{{orderpickup.order.get_cart_total}}</td>
+                                           
                         <td>    
                             <form method="POST">
                             {% csrf_token %}
                                 <!-- RECEIVE PAYMENT -->
-                                <input type="hidden" value="{{order.id}}" name="transaction-successful">
+                                <input type="hidden" value="{{orderpickup.order.id}}" name="transaction-successful">
                                 <input type="submit" value="Receive Payment" name="button" id="transaction-successful" onclick="return confirm('Payment Received?');">
                                 <br>
                                 <!-- CANCEL -->
-                                <input type="hidden" value="{{order.id}}" name="cancel">
+                                <input type="hidden" value="{{orderpickup.order.id}}" name="cancel">
                                 <input type="submit" value="Cancel" name="button" id="cancel" onclick="return confirm('Cancel Reservation?');">
                             </form>
                         </td>

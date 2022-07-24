@@ -105,10 +105,9 @@ table.customer-info-table {
     margin: 13px 0 30px 25px;
 }
 #datePickerId {
-    text-align: center;
     margin-left: 10px;
     font-size: 15px;
-    width: 220px;
+    width: 205px;
     border: 1px solid #C8C8C8;
     border-radius: 20px;
     padding: 5px;
@@ -116,6 +115,9 @@ table.customer-info-table {
 
 /* PLACE ORDER BUTTON */
 #make-payment {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    font-size: 16px;
     width: 100%;
     background-color: #001D6E;
     color: white;

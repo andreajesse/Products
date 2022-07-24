@@ -278,7 +278,8 @@ def processOrder(request):
 
 #ADMIN VIEW: PENDING ORDERS
 def pending_orders(request):
-    orders = Order.objects.filter(complete=True, pickup_status='Pending')
+    orders = OrderPickUp.objects.filter(order__complete=True, order__pickup_status='Pending')
+    items = OrderItem.objects.all()
 
     if request.method == 'POST':
         if request.POST['button'] == 'Reject':
@@ -288,7 +289,13 @@ def pending_orders(request):
             approve_pickup = request.POST.get('approve')
             Order.objects.filter(pk=approve_pickup).update(pickup_status='Approved')
 
-    context = {'orders': orders}
+    #SEARCH
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    search = OrderPickUp.objects.filter(
+        Q(order__transaction_id__icontains=q)
+    )
+
+    context = {'orders': orders, 'items': items, 'search': search}
     return render(request, 'base/otc-products/admin/pending-reservations.html', context)
 
 #ADMIN VIEW: ORDER ITEMS OF INDIVIDUAL CUSTOMERS
@@ -301,8 +308,8 @@ def order_items(request, pk):
 
 #ADMIN VIEW: APPROVAL OF ORDERS
 def approved_orders(request):
-    orders = Order.objects.filter(complete=True, pickup_status='Approved')
-    orderitems = OrderItem.objects.filter()
+    orders = OrderPickUp.objects.filter(order__complete=True, order__pickup_status='Approved')
+    items = OrderItem.objects.all()
 
     if request.method == 'POST':
         if request.POST['button'] == 'Cancel':
@@ -311,9 +318,9 @@ def approved_orders(request):
         elif request.POST['button'] == 'Receive Payment':
             transac_successful = request.POST.get('transaction-successful')
             Order.objects.filter(pk=transac_successful).update(pickup_status='Transaction Successful')
-            #return redirect('sales-invoice')
+            return redirect('sales-invoice')
 
-    context = {'orders': orders, 'orderitems': orderitems}
+    context = {'orders': orders, 'items': items}
     return render(request, 'base/otc-products/admin/approved-reservations.html', context)
 
 #SALES INVOICE RENDER VIEW
